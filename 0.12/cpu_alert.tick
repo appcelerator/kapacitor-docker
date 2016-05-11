@@ -1,0 +1,9 @@
+stream
+    |from()
+        .measurement('cpu')
+	.where(lambda: "cpu" == 'cpu-total')
+    |alert()
+        .crit(lambda: "usage_idle" <  70)
+        // Whenever we get an alert write it to a file.
+        .log('/tmp/alerts.log')
+        .slack()
