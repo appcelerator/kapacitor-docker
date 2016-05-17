@@ -26,6 +26,7 @@ docker run appcelerator/kapacitor
 - OUTPUT_SLACK_CHANNEL - Channel, without the pound sign, defaults to kapacitor
 - OUTPUT_SLACK_STATE_CHANGE_ONLY - only report state changes
 - OUTPUT_SLACK_GLOBAL - sends all alerts to slack
+- CONSUL - Consul URL for container pilot, example: consul:8500, disabled by default
 
 ## Kapacitor
 
