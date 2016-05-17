@@ -36,7 +36,24 @@ ENV INFLUXDB_RP default
 COPY run.sh /run.sh
 COPY kapacitor.conf /etc/kapacitor.conf.tpl
 COPY e494ce6c-d063-46f8-9d71-9030a29eef4b.srpl /.kapacitor/replay/e494ce6c-d063-46f8-9d71-9030a29eef4b.srpl
-ENTRYPOINT ["/run.sh"]
+
+RUN apk --no-cache add curl bash
+
+# Add ContainerPilot
+ENV CONTAINERPILOT 2.1.0
+RUN curl -Lo /tmp/cb.tar.gz https://github.com/joyent/containerpilot/releases/download/$CONTAINERPILOT/containerpilot-$CONTAINERPILOT.tar.gz \
+&& tar -xz -f /tmp/cb.tar.gz \
+&& mv ./containerpilot /bin/
+COPY containerpilot.json /etc/containerpilot.json
+COPY start.sh /start.sh
+COPY stop.sh /stop.sh
+RUN chmod +x /*.sh
+
+#ENV CONSUL=consul:8500
+ENV CONTAINERPILOT=file:///etc/containerpilot.json
+ENV DEPENDENCIES=influxdb
+
+CMD ["/start.sh"]
 
 LABEL axway_image=kapacitor
 # will be updated whenever there's a new commit
