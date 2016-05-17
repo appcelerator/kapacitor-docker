@@ -63,4 +63,4 @@ echo "Enabled outputs:"
 echo "SMTP: ${OUTPUT_SMTP_ENABLED:-false} (${OUTPUT_SMTP_TO:-default})"
 echo "SLACK: ${OUTPUT_SLACK_ENABLED:-false} (#${OUTPUT_SLACK_CHANNEL:-kapacitor})"
 echo
-exec "$KAPACITORD_BIN" -config /etc/kapacitor.conf
+"$KAPACITORD_BIN" -config /etc/kapacitor.conf

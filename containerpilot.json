@@ -1,0 +1,19 @@
+{
+  "consul": "[consul]",
+  "services": [
+    {
+      "name": "kapacitor",
+      "port": 8500,
+      "health": "pidof kapacitord",
+      "poll": 10,
+      "ttl": 30
+    }
+  ],
+  "backends": [
+    {
+      "name": "influxdb",
+      "poll": 10,
+      "onChange": "/stop.sh"
+    }
+  ]
+}
