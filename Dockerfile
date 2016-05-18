@@ -33,9 +33,6 @@ ENV INFLUXDB_URL http://localhost:8086
 ENV INFLUXDB_DB telegraf
 ENV INFLUXDB_RP default
 
-COPY run.sh /run.sh
-COPY kapacitor.conf /etc/kapacitor.conf.tpl
-COPY e494ce6c-d063-46f8-9d71-9030a29eef4b.srpl /.kapacitor/replay/e494ce6c-d063-46f8-9d71-9030a29eef4b.srpl
 
 RUN apk --no-cache add curl bash
 
@@ -53,6 +50,10 @@ RUN chmod +x /*.sh
 ENV CP_LOG_LEVEL=ERROR
 ENV CONTAINERPILOT=file:///etc/containerpilot.json
 ENV DEPENDENCIES=influxdb
+
+COPY run.sh /run.sh
+COPY kapacitor.conf /etc/kapacitor.conf.tpl
+COPY e494ce6c-d063-46f8-9d71-9030a29eef4b.srpl /.kapacitor/replay/e494ce6c-d063-46f8-9d71-9030a29eef4b.srpl
 
 CMD ["/start.sh"]
 
