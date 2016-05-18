@@ -50,6 +50,7 @@ COPY stop.sh /stop.sh
 RUN chmod +x /*.sh
 
 #ENV CONSUL=consul:8500
+ENV CP_LOG_LEVEL=ERROR
 ENV CONTAINERPILOT=file:///etc/containerpilot.json
 ENV DEPENDENCIES=influxdb
 
