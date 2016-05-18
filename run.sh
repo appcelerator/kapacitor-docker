@@ -42,22 +42,27 @@ wait_for_start_of_kapacitor(){
     echo "Kapacitor is available"
 }
 
-echo "Kapacitor in background for alert configuration"
-cat "$KAPACITOR_CONF" | sed 's/ enabled = true/ enabled = false/' > "$KAPACITOR_CONF.start"
-"$KAPACITORD_BIN" -hostname "$KAPACITOR_HOST" -config "$KAPACITOR_CONF.start" &
-wait_for_start_of_kapacitor
+ls /etc/*.tick >/dev/null 2>&1
+if [ $? -eq 0 ]; then
+  echo "Kapacitor in background for alert configuration"
+  cat "$KAPACITOR_CONF" | sed 's/ enabled = true/ enabled = false/' > "$KAPACITOR_CONF.start"
+  "$KAPACITORD_BIN" -hostname "$KAPACITOR_HOST" -config "$KAPACITOR_CONF.start" &
+  wait_for_start_of_kapacitor
 
-for alert in $(ls /etc/*.tick 2>/dev/null); do
-  alertname="$(basename $alert .tick | sed 's/_alert//')"
-  echo "defining alert $alertname..."
-  $KAPACITOR_BIN define ${alertname}_alert -type stream  -tick $alert  -dbrp ${INFLUXDB_DB:-telegraf}.${INFLUXDB_RP:-default}
-  $KAPACITOR_BIN enable ${alertname}_alert
-  $KAPACITOR_BIN show ${alertname}_alert
-done
+  for alert in $(ls /etc/*.tick 2>/dev/null); do
+    alertname="$(basename $alert .tick | sed 's/_alert//')"
+    echo "defining alert $alertname..."
+    $KAPACITOR_BIN define ${alertname}_alert -type stream  -tick $alert  -dbrp ${INFLUXDB_DB:-telegraf}.${INFLUXDB_RP:-default}
+    $KAPACITOR_BIN enable ${alertname}_alert
+    $KAPACITOR_BIN show ${alertname}_alert
+  done
 
-echo
-echo "Restarting Kapacitor..."
-killall "$(basename $KAPACITORD_BIN)"
+  echo
+  echo "Restarting Kapacitor..."
+  killall "$(basename $KAPACITORD_BIN)"
+else
+  echo "no alert configuration found"
+fi
 echo
 echo "Enabled outputs:"
 echo "SMTP: ${OUTPUT_SMTP_ENABLED:-false} (${OUTPUT_SMTP_TO:-default})"
