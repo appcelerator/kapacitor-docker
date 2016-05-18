@@ -38,14 +38,14 @@ wait_for_start_of_kapacitor(){
     echo "Kapacitor is available"
 }
 
-ls /etc/*.tick >/dev/null 2>&1
+ls /etc/kapacitor.alerts/*.tick >/dev/null 2>&1
 if [ $? -eq 0 ]; then
   echo "Kapacitor in background for alert configuration"
   cat "$KAPACITOR_CONF" | sed 's/ enabled = true/ enabled = false/' > "$KAPACITOR_CONF.start"
   "$KAPACITORD_BIN" -hostname "127.0.0.1" -config "$KAPACITOR_CONF.start" &
   wait_for_start_of_kapacitor
 
-  for alert in $(ls /etc/*.tick 2>/dev/null); do
+  for alert in $(ls /etc/kapacitor.alerts/*.tick 2>/dev/null); do
     alertname="$(basename $alert .tick | sed 's/_alert//')"
     echo "defining alert $alertname..."
     $KAPACITOR_BIN define ${alertname}_alert -type stream  -tick $alert  -dbrp ${INFLUXDB_DB:-telegraf}.${INFLUXDB_RP:-default}

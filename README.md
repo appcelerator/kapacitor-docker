@@ -30,8 +30,10 @@ docker run appcelerator/kapacitor
 
 ## Kapacitor
 
-Kapacitor will look for /etc/*.tick files and configure the alerts accordingly. A file named cpu.tick or cpu_alert.tick will result in an alarm named cpu_alert.
+Kapacitor will look for /etc/kapacitor.alerts/*.tick files and configure the alerts accordingly. A file named cpu.tick or cpu_alert.tick will result in an alarm named cpu_alert.
+
+```docker run -v /var/lib/kapacitor/alerts:/etc/kapacitor.alerts:ro appcelerator/kapacitor```
 
 A stream recording was included with the image and can be used to simulate a heavy CPU load that will trigger the alerts.
 
-     docker exec -it $(docker ps --format "{{.ID}}" --filter "name=kapacitor") kapacitor replay -id e494ce6c-d063-46f8-9d71-9030a29eef4b -name cpu_alert -fast
+```docker exec -it $(docker ps --format "{{.ID}}" --filter "name=kapacitor") kapacitor replay -id e494ce6c-d063-46f8-9d71-9030a29eef4b -name cpu_alert -fast```
