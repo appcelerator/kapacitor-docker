@@ -20,14 +20,10 @@ if [ ! -f "$KAPACITOR_CONF" ]; then
 fi
 
 KAPACITOR_HOSTNAME="${KAPACITOR_HOSTNAME:-$HOSTNAME}"
-KAPACITOR_HOST="127.0.0.1"
-KAPACITOR_API_PORT="9092"
-API_URL="http://${KAPACITOR_HOST}:${KAPACITOR_API_PORT}"
 wait_for_start_of_kapacitor(){
     #wait for the startup of kapacitor
     local retry=0
     echo "waiting for availability of kapacitor..."
-    #while ! curl ${API_URL} 2>/dev/null; do
     while ! $KAPACITOR_BIN -url $API_URL list tasks; do
         netstat -na | grep -w 9092
         retry=$((retry+1))
@@ -46,7 +42,7 @@ ls /etc/*.tick >/dev/null 2>&1
 if [ $? -eq 0 ]; then
   echo "Kapacitor in background for alert configuration"
   cat "$KAPACITOR_CONF" | sed 's/ enabled = true/ enabled = false/' > "$KAPACITOR_CONF.start"
-  "$KAPACITORD_BIN" -hostname "$KAPACITOR_HOST" -config "$KAPACITOR_CONF.start" &
+  "$KAPACITORD_BIN" -hostname "127.0.0.1" -config "$KAPACITOR_CONF.start" &
   wait_for_start_of_kapacitor
 
   for alert in $(ls /etc/*.tick 2>/dev/null); do
