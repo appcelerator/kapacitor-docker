@@ -12,7 +12,7 @@ docker run appcelerator/kapacitor
 ## Environment variables
 
 - KAPACITOR_LOG_LEVEL - sets the log level, defaults to INFO
-- KAPACITOR_HOSTNAME - sets the hostname, defaults to the container hostname
+- KAPACITOR_HOSTNAME - sets the hostname, defaults to localhost. If value is _auto_, the ip will be guessed
 - INFLUXDB_URL - URL of influxdb, defaults to http://localhost:8086
 - INFLUXDB_DB - INFLUXDB database, used for alert definition, defaults to telegraf
 - INFLUXDB_RP - INFLUXDB retention policy, used for alert definition, defaults to default
