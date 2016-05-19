@@ -49,7 +49,7 @@ RUN chmod +x /*.sh
 #ENV CONSUL=consul:8500
 ENV CP_LOG_LEVEL=ERROR
 ENV CONTAINERPILOT=file:///etc/containerpilot.json
-ENV DEPENDENCIES=influxdb
+ENV DEPENDENCIES="influxdb amp-log-agent"
 
 COPY run.sh /run.sh
 COPY kapacitor.conf /etc/kapacitor.conf.tpl
