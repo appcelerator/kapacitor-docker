@@ -10,8 +10,8 @@
       "name": "kapacitor",
       "port": 8500,
       "health": "pidof kapacitord",
-      "poll": 10,
-      "ttl": 30
+      "poll": [poll],
+      "ttl": [ttl]
     }
   ],
   "backends": [
