@@ -48,6 +48,8 @@ RUN chmod +x /*.sh
 
 #ENV CONSUL=consul:8500
 ENV CP_LOG_LEVEL=ERROR
+ENV CP_TTL=20
+ENV CP_POLL=5
 ENV CONTAINERPILOT=file:///etc/containerpilot.json
 ENV DEPENDENCIES="influxdb amp-log-agent"
 
