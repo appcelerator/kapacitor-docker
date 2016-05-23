@@ -1,12 +1,5 @@
-FROM alpine:3.3
+FROM appcelerator/alpine:3.3.2
 MAINTAINER Nicolas Degory <ndegory@axway.com>
-
-RUN apk update && \
-    apk --no-cache add python ca-certificates && \
-    apk --virtual envtpl-deps add --update py-pip python-dev curl && \
-    curl https://bootstrap.pypa.io/ez_setup.py | python && \
-    pip install envtpl && \
-    apk del envtpl-deps && rm -rf /var/cache/apk/*
 
 ENV KAPACITOR_VERSION 0.13.1
 
@@ -33,25 +26,13 @@ ENV INFLUXDB_URL http://localhost:8086
 ENV INFLUXDB_DB telegraf
 ENV INFLUXDB_RP default
 
-
-RUN apk --no-cache add curl bash
-
-# Add ContainerPilot
-ENV CONTAINERPILOT 2.1.0
-RUN curl -Lo /tmp/cb.tar.gz https://github.com/joyent/containerpilot/releases/download/$CONTAINERPILOT/containerpilot-$CONTAINERPILOT.tar.gz \
-&& tar -xz -f /tmp/cb.tar.gz \
-&& mv ./containerpilot /bin/
-COPY containerpilot.json /etc/containerpilot.json
-COPY start.sh /start.sh
-COPY stop.sh /stop.sh
-RUN chmod +x /*.sh
-
 #ENV CONSUL=consul:8500
-ENV CP_LOG_LEVEL=ERROR
+ENV CP_SERVICE_NAME=kapacitor
+ENV CP_SERVICE_BIN=kapacitord
+ENV CP_SERVICE_PORT=9092
 ENV CP_TTL=20
 ENV CP_POLL=5
-ENV CONTAINERPILOT=file:///etc/containerpilot.json
-ENV DEPENDENCIES="influxdb amp-log-agent"
+ENV CP_DEPENDENCIES='[{"name": "influxdb"}, {"name": "amp-log-agent", "onChange": "ignore"} ]'
 
 COPY run.sh /run.sh
 COPY kapacitor.conf /etc/kapacitor.conf.tpl
