@@ -54,7 +54,7 @@ ls /etc/kapacitor.alerts/*.tick >/dev/null 2>&1
 if [ $? -eq 0 ]; then
   echo "Kapacitor in background for alert configuration"
   cat "$KAPACITOR_CONF" | sed 's/ enabled = true/ enabled = false/' > "$KAPACITOR_CONF.start"
-  "$KAPACITORD_BIN" -hostname "$KAPACITOR_HOST" -config "$KAPACITOR_CONF.start" &
+  "$KAPACITORD_BIN" -config "$KAPACITOR_CONF.start" &
   wait_for_start_of_kapacitor
 
   for alert in $(ls /etc/kapacitor.alerts/*.tick 2>/dev/null); do
