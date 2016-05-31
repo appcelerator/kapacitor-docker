@@ -2,7 +2,9 @@
 
 KAPACITORD_BIN=/bin/kapacitord
 KAPACITOR_BIN=/bin/kapacitor
-KAPACITOR_CONF=/etc/kapacitor.conf
+KAPACITOR_CONF=/etc/kapacitor/kapacitor.conf
+CONFIG_OVERRIDE_FILE="/etc/base-config/kapacitor/kapacitor.conf"
+CONFIG_EXTRA_DIR="/etc/extra-config/kapacitor/"
 
 echo "$INFLUXDB_URL" | egrep -q "^https?://"
 if [ $? -ne 0 ]; then
@@ -18,11 +20,16 @@ if [ "x$KAPACITOR_HOSTNAME" = "xauto" ]; then
   fi
 fi
 
-if [ -f "$KAPACITOR_CONF.tpl" ]; then
-  # deadman configuration can contain markups similar to those of envtpl
-  cat "$KAPACITOR_CONF.tpl" | sed '/{{ \./ s/{{\([^{]*\)}}/@@\1@@/g' > "$KAPACITOR_CONF.escaped.tpl"
-  envtpl $KAPACITOR_CONF.escaped.tpl
-  cat "$KAPACITOR_CONF.escaped" | sed '/@@ \./ s/@@\([^@]*\)@@/{{\1}}/g' > "$KAPACITOR_CONF"
+if [ -f "$CONFIG_OVERRIDE_FILE" ]; then
+  echo "Override Kapacitor configuration file"
+  cp "${CONFIG_OVERRIDE_FILE}" "${KAPACITOR_CONF}"
+else
+  if [ -f "$KAPACITOR_CONF.tpl" ]; then
+    # deadman configuration can contain markups similar to those of envtpl
+    cat "$KAPACITOR_CONF.tpl" | sed '/{{ \./ s/{{\([^{]*\)}}/@@\1@@/g' > "$KAPACITOR_CONF.escaped.tpl"
+    envtpl $KAPACITOR_CONF.escaped.tpl
+    cat "$KAPACITOR_CONF.escaped" | sed '/@@ \./ s/@@\([^@]*\)@@/{{\1}}/g' > "$KAPACITOR_CONF"
+  fi
 fi
 if [ ! -f "$KAPACITOR_CONF" ]; then
   echo "No $KAPACITOR_CONF, abort"
@@ -50,14 +57,14 @@ wait_for_start_of_kapacitor(){
     echo "Kapacitor is available"
 }
 
-ls /etc/kapacitor.alerts/*.tick >/dev/null 2>&1
+ls $CONFIG_EXTRA_DIR/*.tick >/dev/null 2>&1
 if [ $? -eq 0 ]; then
   echo "Kapacitor in background for alert configuration"
   cat "$KAPACITOR_CONF" | sed 's/ enabled = true/ enabled = false/' > "$KAPACITOR_CONF.start"
   "$KAPACITORD_BIN" -config "$KAPACITOR_CONF.start" &
   wait_for_start_of_kapacitor
 
-  for alert in $(ls /etc/kapacitor.alerts/*.tick 2>/dev/null); do
+  for alert in $(ls $CONFIG_EXTRA_DIR/*.tick 2>/dev/null); do
     alertname="$(basename $alert .tick | sed 's/_alert//')"
     echo "defining alert $alertname..."
     $KAPACITOR_BIN define ${alertname}_alert -type stream  -tick $alert  -dbrp ${INFLUXDB_DB:-telegraf}.${INFLUXDB_RP:-default}

@@ -34,9 +34,9 @@ ENV CP_TTL=20
 ENV CP_POLL=5
 ENV CP_DEPENDENCIES='[{"name": "influxdb"}, {"name": "amp-log-agent", "onChange": "ignore"} ]'
 
-COPY run.sh /run.sh
-COPY kapacitor.conf /etc/kapacitor.conf.tpl
-COPY e494ce6c-d063-46f8-9d71-9030a29eef4b.srpl /.kapacitor/replay/e494ce6c-d063-46f8-9d71-9030a29eef4b.srpl
+ADD run.sh /run.sh
+ADD kapacitor.conf /etc/kapacitor/kapacitor.conf.tpl
+ADD e494ce6c-d063-46f8-9d71-9030a29eef4b.srpl /.kapacitor/replay/e494ce6c-d063-46f8-9d71-9030a29eef4b.srpl
 
 CMD ["/start.sh"]
 
