@@ -1,11 +1,9 @@
-FROM appcelerator/alpine:3.3.2
+FROM appcelerator/amp:latest
 MAINTAINER Nicolas Degory <ndegory@axway.com>
 
 ENV KAPACITOR_VERSION 0.13.1
 
-RUN echo "http://nl.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
-    echo "http://nl.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
-    apk update && apk upgrade && \
+RUN apk update && apk upgrade && \
     apk -v --virtual build-deps add --update go>1.6 curl git gcc musl-dev && \
     export GOPATH=/go && \
     go get -v github.com/influxdata/kapacitor && \
