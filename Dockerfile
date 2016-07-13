@@ -34,7 +34,7 @@ ADD run.sh /run.sh
 ADD kapacitor.conf /etc/kapacitor/kapacitor.conf.tpl
 ADD e494ce6c-d063-46f8-9d71-9030a29eef4b.srpl /.kapacitor/replay/e494ce6c-d063-46f8-9d71-9030a29eef4b.srpl
 
-ENTRYPOINT ["/run.sh"]
+ENTRYPOINT ["/amp-pilot"]
 
 LABEL axway_image=kapacitor
 # will be updated whenever there's a new commit
