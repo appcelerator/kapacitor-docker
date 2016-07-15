@@ -1,10 +1,11 @@
-#!/bin/sh
+#!/bin/bash
 
 KAPACITORD_BIN=/bin/kapacitord
 KAPACITOR_BIN=/bin/kapacitor
 KAPACITOR_CONF=/etc/kapacitor/kapacitor.conf
 CONFIG_OVERRIDE_FILE="/etc/base-config/kapacitor/kapacitor.conf"
 CONFIG_EXTRA_DIR="/etc/extra-config/kapacitor/"
+PILOT="/bin/amp-pilot"
 
 echo "$INFLUXDB_URL" | egrep -q "^https?://"
 if [ $? -ne 0 ]; then
@@ -64,7 +65,7 @@ if [ $? -eq 0 ]; then
   "$KAPACITORD_BIN" -config "$KAPACITOR_CONF.start" &
   wait_for_start_of_kapacitor
 
-  for alert in $(ls $CONFIG_EXTRA_DIR/*.tick 2>/dev/null); do
+  for alert in $CONFIG_EXTRA_DIR/*.tick; do
     alertname="$(basename $alert .tick | sed 's/_alert//')"
     echo "defining alert $alertname..."
     $KAPACITOR_BIN define ${alertname}_alert -type stream  -tick $alert  -dbrp ${INFLUXDB_DB:-telegraf}.${INFLUXDB_RP:-default}
@@ -83,4 +84,13 @@ echo "Enabled outputs:"
 echo "SMTP: ${OUTPUT_SMTP_ENABLED:-false} (${OUTPUT_SMTP_TO:-default})"
 echo "SLACK: ${OUTPUT_SLACK_ENABLED:-false} (#${OUTPUT_SLACK_CHANNEL:-kapacitor})"
 echo
-"$KAPACITORD_BIN" -config $KAPACITOR_CONF
+CMD="$KAPACITORD_BIN"
+CMDARGS="-config $KAPACITOR_CONF"
+export AMP_LAUNCH_CMD="$CMD $CMDARGS"
+if [[ -n "$CONSUL" && -n "$PILOT" ]]; then
+    echo "registering in Consul with $PILOT"
+    exec "$PILOT" "$CMD" $CMDARGS
+else
+    echo "not registering in Consul"
+    exec "$CMD" $CMDARGS
+fi
