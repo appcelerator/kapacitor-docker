@@ -13,6 +13,7 @@ docker run appcelerator/kapacitor
 
 - KAPACITOR_LOG_LEVEL - sets the log level, defaults to INFO
 - KAPACITOR_HOSTNAME - sets the hostname, defaults to localhost. If value is _auto_, the ip will be guessed
+- CONFIG_ARCHIVE_URL - URL of static configuration file tarball archive
 - INFLUXDB_URL - URL of influxdb, defaults to http://localhost:8086
 - INFLUXDB_DB - INFLUXDB database, used for alert definition, defaults to telegraf
 - INFLUXDB_RP - INFLUXDB retention policy, used for alert definition, defaults to default
@@ -30,9 +31,9 @@ docker run appcelerator/kapacitor
 
 ## Kapacitor
 
-Kapacitor will look for /etc/kapacitor.alerts/*.tick files and configure the alerts accordingly. A file named cpu.tick or cpu_alert.tick will result in an alarm named cpu_alert.
+Kapacitor will look for /etc/extra-config/kapacitor/*.tick files and configure the alerts accordingly. A file named cpu.tick or cpu_alert.tick will result in an alarm named cpu_alert.
 
-```docker run -v /var/lib/kapacitor/alerts:/etc/kapacitor.alerts:ro appcelerator/kapacitor```
+```docker run -v /var/lib/kapacitor/alerts:/etc/extra-config/kapacitor/kapacitor.alerts:ro appcelerator/kapacitor```
 
 A stream recording was included with the image and can be used to simulate a heavy CPU load that will trigger the alerts.
 

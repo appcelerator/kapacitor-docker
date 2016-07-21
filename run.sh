@@ -21,6 +21,23 @@ if [ "x$KAPACITOR_HOSTNAME" = "xauto" ]; then
   fi
 fi
 
+if [[ -n "$CONFIG_ARCHIVE_URL" ]]; then
+  echo "INFO - Download configuration archive file $CONFIG_ARCHIVE_URL..."
+  curl -L "$CONFIG_ARCHIVE_URL" -o /tmp/config.tgz
+  if [[ $? -eq 0 ]]; then
+    tmpd=$(mktemp -d)
+    gunzip -c /tmp/config.tgz | tar xf - -C $tmpd
+    echo "INFO - Overriding configuration file:"
+    find $tmpd/*/base-config/kapacitor 2>/dev/null
+    echo "INFO - Extra configuration file:"
+    find $tmpd/*/extra-config/kapacitor 2>/dev/null
+    mv $tmpd/*/extra-config $tmpd/*/base-config /etc/ 2>/dev/null
+    rm -rf /tmp/config.tgz "$tmpd"
+  else
+    echo "WARN - download failed, ignore"
+  fi
+fi
+
 if [ -f "$CONFIG_OVERRIDE_FILE" ]; then
   echo "Override Kapacitor configuration file"
   cp "${CONFIG_OVERRIDE_FILE}" "${KAPACITOR_CONF}"
@@ -66,6 +83,7 @@ if [ $? -eq 0 ]; then
   wait_for_start_of_kapacitor
 
   for alert in $CONFIG_EXTRA_DIR/*.tick; do
+    echo "$f" | grep '*' && break
     alertname="$(basename $alert .tick | sed 's/_alert//')"
     echo "defining alert $alertname..."
     $KAPACITOR_BIN define ${alertname}_alert -type stream  -tick $alert  -dbrp ${INFLUXDB_DB:-telegraf}.${INFLUXDB_RP:-default}
