@@ -1,25 +1,18 @@
 version: '2'
 services:
   influxdb:
-    extends:
-      file: docker-compose.yml
-      service: influxdb
+    image: appcelerator/influxdb:latest
     environment:
       FORCE_HOSTNAME: auto
       CONFIG_ARCHIVE_URL: "https://github.com/appcelerator/amp-config/archive/0.1.0.tar.gz"
       PRE_CREATE_DB: "telegraf"
   kapacitor:
-    extends:
-      file: docker-compose.yml
-      service: kapacitor
+    image: appcelerator/kapacitor
+    build: .
     environment:
       CONFIG_ARCHIVE_URL: "https://github.com/appcelerator/amp-config/archive/0.1.0.tar.gz"
       KAPACITOR_HOSTNAME: auto
       INFLUXDB_URL: http://influxdb:8086
-    depends_on:
-      - influxdb
   sut:
     image: appcelerator/sut
     build: ./sut
-    depends_on:
-      - kapacitor
