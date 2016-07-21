@@ -1,21 +1,22 @@
 version: '2'
 services:
-  consul:
-    extends:
-      file: docker-compose.yml
-      service: consul
   influxdb:
     extends:
       file: docker-compose.yml
       service: influxdb
-    depends_on:
-      - consul
+    environment:
+      FORCE_HOSTNAME: auto
+      CONFIG_ARCHIVE_URL: "https://github.com/appcelerator/amp-config/archive/0.1.0.tar.gz"
+      PRE_CREATE_DB: "telegraf"
   kapacitor:
     extends:
       file: docker-compose.yml
       service: kapacitor
+    environment:
+      CONFIG_ARCHIVE_URL: "https://github.com/appcelerator/amp-config/archive/0.1.0.tar.gz"
+      KAPACITOR_HOSTNAME: auto
+      INFLUXDB_URL: http://influxdb:8086
     depends_on:
-      - consul
       - influxdb
   sut:
     image: appcelerator/sut
