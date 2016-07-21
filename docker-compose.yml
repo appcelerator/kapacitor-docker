@@ -10,12 +10,6 @@ services:
     command:
       [ "-bootstrap"]
 
-  sut:
-    image: local/sut
-    build:
-      context: ./sut
-      dockerfile: Dockerfile
-
   telegraf:
     image: appcelerator/telegraf:latest
     volumes:
@@ -45,7 +39,7 @@ services:
       - "ServiceUUId=system.influxdb"
 
   kapacitor:
-    image: local/kapacitor
+    image: appcelerator/kapacitor
     build:
       context: .
       dockerfile: Dockerfile
