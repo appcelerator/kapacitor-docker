@@ -45,7 +45,10 @@ services:
       - "ServiceUUId=system.influxdb"
 
   kapacitor:
-    image: appcelerator/kapacitor:latest
+    image: local/kapacitor
+    build:
+      context: .
+      dockerfile: Dockerfile
     environment:
       CONSUL: consul:8500
       CONFIG_ARCHIVE_URL: "https://github.com/appcelerator/amp-config/archive/0.1.0.tar.gz"
