@@ -1,25 +1,53 @@
 version: '2'
 services:
   consul:
-    extends:
-      file: docker-compose.yml
-      service: consul
+    image: appcelerator/consul:latest-server
+    hostname: consul
+    ports:
+      - "8400:8400"
+      - "8500:8500"
+      - "8600:53/udp"
+    command:
+      [ "-bootstrap"]
+  pilot:
+    image: appcelerator/amp-pilot:latest
+    volumes:
+      - /bin/amppilot:/bin/amppilot
+    environment:
+      CONSUL: consul:8500
   influxdb:
-    extends:
-      file: docker-compose.yml
-      service: influxdb
+    image: appcelerator/influxdb:latest
+    volumes:
+      - /bin/amppilot/amp-pilot.alpine:/bin/amp-pilot:ro
+    environment:
+      CONSUL: consul:8500
+      DEPENDENCIES: ""
+      FORCE_HOSTNAME: auto
+      CONFIG_ARCHIVE_URL: "https://github.com/appcelerator/amp-config/archive/0.1.0.tar.gz"
+      PRE_CREATE_DB: "telegraf"
+    labels:
+      - "ServiceUUId=system.influxdb"
+      - "io.appcelerator.amp.build.mounts=/bin/amppilot/amp-pilot.alpine:/bin/amp-pilot"
     depends_on:
       - consul
+      - pilot
   kapacitor:
-    extends:
-      file: docker-compose.yml
-      service: kapacitor
+    image: appcelerator/kapacitor
+    build: .
+    volumes:
+      - /bin/amppilot/amp-pilot.alpine:/bin/amp-pilot:ro
+    environment:
+      CONSUL: consul:8500
+      CONFIG_ARCHIVE_URL: "https://github.com/appcelerator/amp-config/archive/0.1.0.tar.gz"
+      KAPACITOR_HOSTNAME: auto
+      INFLUXDB_URL: http://influxdb:8086
+      DEPENDENCIES: "influxdb"
+    labels:
+      - "io.appcelerator.amp.build.mounts=/bin/amppilot/amp-pilot.alpine:/bin/amp-pilot"
     depends_on:
-      - consul
       - influxdb
   sut:
-    extends:
-      file: docker-compose.yml
-      service: sut
+    image: appcelerator/sut
+    build: ./sut
     depends_on:
       - kapacitor
