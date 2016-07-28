@@ -1,4 +1,4 @@
-FROM appcelerator/amp:latest
+FROM appcelerator/alpine:20160726
 MAINTAINER Nicolas Degory <ndegory@axway.com>
 
 ENV KAPACITOR_VERSION 0.13.1

@@ -15,10 +15,12 @@ services:
       - /bin/amppilot:/bin/amppilot
     environment:
       CONSUL: consul:8500
+    labels:
+      - "io.appcelerator.amp.build.mounts=/bin/amppilot"
   influxdb:
     image: appcelerator/influxdb:latest
     volumes:
-      - /bin/amppilot/amp-pilot.alpine:/bin/amp-pilot:ro
+      - /bin/amppilot:/bin/amppilot:ro
     environment:
       CONSUL: consul:8500
       DEPENDENCIES: ""
@@ -27,7 +29,7 @@ services:
       PRE_CREATE_DB: "telegraf"
     labels:
       - "ServiceUUId=system.influxdb"
-      - "io.appcelerator.amp.build.mounts=/bin/amppilot/amp-pilot.alpine:/bin/amp-pilot"
+      - "io.appcelerator.amp.build.mounts=/bin/amppilot/amppilot"
     depends_on:
       - consul
       - pilot
@@ -35,7 +37,7 @@ services:
     image: appcelerator/kapacitor
     build: .
     volumes:
-      - /bin/amppilot/amp-pilot.alpine:/bin/amp-pilot:ro
+      - /bin/amppilot:/bin/amppilot:ro
     environment:
       CONSUL: consul:8500
       CONFIG_ARCHIVE_URL: "https://github.com/appcelerator/amp-config/archive/0.1.0.tar.gz"
@@ -43,7 +45,7 @@ services:
       INFLUXDB_URL: http://influxdb:8086
       DEPENDENCIES: "influxdb"
     labels:
-      - "io.appcelerator.amp.build.mounts=/bin/amppilot/amp-pilot.alpine:/bin/amp-pilot"
+      - "io.appcelerator.amp.build.mounts=/bin/amppilot"
     depends_on:
       - influxdb
   sut:
