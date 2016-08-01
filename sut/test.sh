@@ -20,7 +20,7 @@ if [[ $r -ne 0 ]]; then
   echo "ping failed"
   curl -I $KAPACITOR_HOST:9092/kapacitor/v1/ping
   echo "Running containers:"
-  docker-compose ps
+  docker ps
   ci=$(docker ps -a | grep /influxdb | head -1 | awk '{print $1}')
   echo "logs from influxdb $ci:"
   docker logs $ci
