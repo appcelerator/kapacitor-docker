@@ -17,7 +17,7 @@ if [ "x$KAPACITOR_HOSTNAME" = "xauto" ]; then
   KAPACITOR_HOSTNAME=$(timeout -t 2 curl http://169.254.169.254/latest/meta-data/local-ipv4 2>/dev/null)
   if [ -z "$KAPACITOR_HOSTNAME" ]; then
     # get local IP
-    KAPACITOR_HOSTNAME=$(ip a show dev eth0 | grep inet | grep eth0 | sed -e 's/^.*inet.//g' -e 's/\/.*$//g')
+    KAPACITOR_HOSTNAME=$(ip a show dev eth0 | grep inet | grep eth0 | tail -1 | sed -e 's/^.*inet.//g' -e 's/\/.*$//g')
   fi
 fi
 
