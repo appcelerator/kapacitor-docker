@@ -45,8 +45,12 @@ services:
   sut:
     image: appcelerator/sut
     build: ./sut
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     depends_on:
       - kapacitor
       - influxdb
       - pilot
       - consul
+    labels:
+      - "io.appcelerator.amp.build.mounts=/var/run/docker.sock"
