@@ -28,7 +28,7 @@ services:
       PRE_CREATE_DB: "telegraf"
     labels:
       - "ServiceUUId=system.influxdb"
-      - "io.appcelerator.amp.build.mounts=/bin/amppilot/amppilot"
+      - "io.appcelerator.amp.build.mounts=/bin/amppilot"
   kapacitor:
     image: appcelerator/kapacitor
     build: .
