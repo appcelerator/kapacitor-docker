@@ -13,11 +13,18 @@ while [[ $r -ne 0 ]]; do
   curl -I $KAPACITOR_HOST:9092/kapacitor/v1/ping 2>/dev/null | grep -q "HTTP/1.1 204 No Content"
   r=$?
   if [[ $i -gt 25 ]]; then break; fi
+  echo -n "+"
 done
 if [[ $r -ne 0 ]]; then
   echo
   echo "ping failed"
   curl -I $KAPACITOR_HOST:9092/kapacitor/v1/ping
+  ci=$(docker ps | grep /influxdb | awk '{print $1}')
+  echo "logs from influxdb $ci:"
+  docker logs $ci
+  ck=$(docker ps | grep /kapacitor | awk '{print $1}')
+  echo "logs from kapacitor $ck:"
+  docker logs $ck
   exit 1
 fi
 echo "[OK]"
