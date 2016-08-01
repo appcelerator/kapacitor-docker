@@ -24,12 +24,6 @@ ENV INFLUXDB_URL http://localhost:8086
 ENV INFLUXDB_DB telegraf
 ENV INFLUXDB_RP default
 
-ENV SERVICE_NAME=kapacitor
-ENV AMPPILOT_LAUNCH_CMD=/bin/kapacitord
-ENV AMPPILOT_REGISTEREDPORT=9092
-ENV DEPENDENCIES="influxdb, amp-log-agent"
-ENV AMPPILOT_AMPLOGAGENT_ONLYATSTARTUP=true
-
 ADD run.sh /run.sh
 ADD kapacitor.conf /etc/kapacitor/kapacitor.conf.tpl
 ADD e494ce6c-d063-46f8-9d71-9030a29eef4b.srpl /.kapacitor/replay/e494ce6c-d063-46f8-9d71-9030a29eef4b.srpl

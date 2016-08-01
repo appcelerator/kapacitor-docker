@@ -17,7 +17,7 @@ if [ "x$KAPACITOR_HOSTNAME" = "xauto" ]; then
   KAPACITOR_HOSTNAME=$(timeout -t 2 curl http://169.254.169.254/latest/meta-data/local-ipv4 2>/dev/null)
   if [ -z "$KAPACITOR_HOSTNAME" ]; then
     # get local IP
-    KAPACITOR_HOSTNAME=$(ip a show dev eth0 | grep inet | grep eth0 | sed -e 's/^.*inet.//g' -e 's/\/.*$//g')
+    KAPACITOR_HOSTNAME=$(ip a show dev eth0 | grep inet | grep eth0 | tail -1 | sed -e 's/^.*inet.//g' -e 's/\/.*$//g')
   fi
 fi
 
@@ -119,6 +119,9 @@ fi
 if [[ -n "$CONSUL" && -x "$PILOT" ]]; then
     echo "registering in Consul with $PILOT"
     export AMPPILOT_LAUNCH_CMD="$CMD $CMDARGS"
+    export DEPENDENCIES=${DEPENDENCIES:-influxdb}
+    export AMPPILOT_REGISTEREDPORT=${AMPPILOT_REGISTEREDPORT:-9092}
+    export SERVICE_NAME=${SERVICE_NAME:-kapacitor}
     exec "$PILOT"
 else
     exec "$CMD" $CMDARGS
