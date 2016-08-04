@@ -31,6 +31,8 @@ ADD e494ce6c-d063-46f8-9d71-9030a29eef4b.srpl /.kapacitor/replay/e494ce6c-d063-4
 ENTRYPOINT ["/bin/sh", "-c"]
 CMD ["/run.sh"]
 
+HEALTHCHECK --interval=5s --retries=3 --timeout=1s CMD curl -I localhost:9092/kapacitor/v1/ping | grep -q "HTTP/1.1 204 No Content"
+
 LABEL axway_image=kapacitor
 # will be updated whenever there's a new commit
 LABEL commit=${GIT_COMMIT}
