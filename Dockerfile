@@ -1,7 +1,7 @@
 FROM appcelerator/alpine:20160726
 MAINTAINER Nicolas Degory <ndegory@axway.com>
 
-ENV KAPACITOR_VERSION 0.13.1
+ENV KAPACITOR_VERSION 1.0.0-rc1
 
 RUN apk update && apk upgrade && \
     apk -v --virtual build-deps add --update go>1.6 curl git gcc musl-dev && \
@@ -9,10 +9,8 @@ RUN apk update && apk upgrade && \
     go get -v github.com/influxdata/kapacitor && \
     cd $GOPATH/src/github.com/influxdata/kapacitor && \
     git checkout -q --detach "v${KAPACITOR_VERSION}" && \
-    go get -v ./... && \
-    go build -v ./cmd/kapacitor && \
-    go build -v ./cmd/kapacitord && \
-    mv $GOPATH/bin/* /bin/ && \
+    python ./build.py && \
+    mv ./build/kapacitor* /bin/ && \
     mkdir -p /var/lib/kapacitor && \
     apk del build-deps && cd / && rm -rf /var/cache/apk/* $GOPATH
 

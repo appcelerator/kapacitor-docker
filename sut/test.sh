@@ -24,7 +24,7 @@ if [[ $r -ne 0 ]]; then
   ci=$(docker ps -a | grep /influxdb | head -1 | awk '{print $1}')
   echo "logs from influxdb $ci:"
   docker logs $ci
-  ck=$(docker ps | grep /kapacitor | awk '{print $1}')
+  ck=$(docker ps -a | grep /kapacitor | head -1 | awk '{print $1}')
   echo "logs from kapacitor $ck:"
   docker logs $ck
   exit 1
