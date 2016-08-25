@@ -5,7 +5,6 @@ KAPACITOR_BIN=/bin/kapacitor
 KAPACITOR_CONF=/etc/kapacitor/kapacitor.conf
 CONFIG_OVERRIDE_FILE="/etc/base-config/kapacitor/kapacitor.conf"
 CONFIG_EXTRA_DIR="/etc/extra-config/kapacitor/"
-PILOT="/bin/amppilot/amp-pilot.alpine"
 
 echo "$INFLUXDB_URL" | egrep -q "^https?://"
 if [ $? -ne 0 ]; then
@@ -104,25 +103,4 @@ echo "SLACK: ${OUTPUT_SLACK_ENABLED:-false} (#${OUTPUT_SLACK_CHANNEL:-kapacitor}
 echo
 CMD="$KAPACITORD_BIN"
 CMDARGS="-config $KAPACITOR_CONF"
-if [[ -n "$CONSUL" ]]; then
-    i=0
-    while [[ ! -x "$PILOT" ]]; do
-        echo "WARNING - amp-pilot is not yet available, try again..."
-        sleep 1
-        ((i++))
-        if [[ $i -ge 20 ]]; then
-            echo "ERROR - can't find amp-pilot, abort"
-            exit 1
-        fi
-    done
-fi
-if [[ -n "$CONSUL" && -x "$PILOT" ]]; then
-    echo "registering in Consul with $PILOT"
-    export AMPPILOT_LAUNCH_CMD="$CMD $CMDARGS"
-    export DEPENDENCIES=${DEPENDENCIES:-influxdb}
-    export AMPPILOT_REGISTEREDPORT=${AMPPILOT_REGISTEREDPORT:-9092}
-    export SERVICE_NAME=${SERVICE_NAME:-kapacitor}
-    exec "$PILOT"
-else
-    exec "$CMD" $CMDARGS
-fi
+exec "$CMD" $CMDARGS
