@@ -5,36 +5,38 @@ Docker Image for [InfluxData Kapacitor](https://influxdata.com/time-series-platf
 
 ## Run
 
-```
-docker run appcelerator/kapacitor
-```
+    docker run appcelerator/kapacitor
 
-## Environment variables
+## Configuration (ENV, -e)
 
-- KAPACITOR_LOG_LEVEL - sets the log level, defaults to INFO
-- KAPACITOR_HOSTNAME - sets the hostname, defaults to localhost. If value is _auto_, the ip will be guessed
-- CONFIG_ARCHIVE_URL - URL of static configuration file tarball archive
-- INFLUXDB_URL - URL of influxdb, defaults to http://localhost:8086
-- INFLUXDB_DB - INFLUXDB database, used for alert definition, defaults to telegraf
-- INFLUXDB_RP - INFLUXDB retention policy, used for alert definition, defaults to default
-- OUTPUT_SMTP_ENABLED - defaults to false
-- OUTPUT_SMTP_HOST - SMTP host
-- OUTPUT_SMTP_PORT - SMTP port
-- OUTPUT_SMTP_FROM - Sender
-- OUTPUT_SMTP_TO - Recipient
-- OUTPUT_SLACK_ENABLED - defaults to false
-- OUTPUT_SLACK_WEBHOOK_URL - Slack webhook URL
-- OUTPUT_SLACK_CHANNEL - Channel, without the pound sign, defaults to kapacitor
-- OUTPUT_SLACK_STATE_CHANGE_ONLY - only report state changes
-- OUTPUT_SLACK_GLOBAL - sends all alerts to slack
-- CONSUL - Consul URL for container pilot, example: consul:8500, disabled by default
+Variable | Description | Default value | Sample value 
+-------- | ----------- | ------------- | ------------
+KAPACITOR_LOG_LEVEL | sets the log level | INFO |
+KAPACITOR_HOSTNAME | sets the hostname. If value is _auto_, the ip will be guessed | localhost | auto
+CONFIG_ARCHIVE_URL | URL of static configuration file tarball archive | |
+INFLUXDB_URL | URL of influxdb | http://localhost:8086 | http://influxdb:8086
+INFLUXDB_DB | INFLUXDB database, used for alert definition | telegraf |
+INFLUXDB_RP | INFLUXDB retention policy, used for alert definition | default |
+OUTPUT_SMTP_ENABLED | SMTP output | false |
+OUTPUT_SMTP_HOST | SMTP host | |
+OUTPUT_SMTP_PORT | SMTP port | |
+OUTPUT_SMTP_FROM | Sender | |
+OUTPUT_SMTP_TO | Recipient | |
+OUTPUT_SLACK_ENABLED | Slack output | false |
+OUTPUT_SLACK_WEBHOOK_URL | Slack webhook URL | |
+OUTPUT_SLACK_CHANNEL | Slack Channel, without the pound sign | kapacitor |
+OUTPUT_SLACK_STATE_CHANGE_ONLY | only report state changes | | true
+OUTPUT_SLACK_GLOBAL | sends all alerts to slack | | true
+CONFIG_ARCHIVE_URL | URL of a configuration archive | | 
 
 ## Kapacitor
 
+Use the CONFIG_ARCHIVE_URL or alternatively use a local volume mapping to a file in /etc/extra-config/kapacitor/ if you want a configuration to be loaded the first time the container starts.
+
 Kapacitor will look for /etc/extra-config/kapacitor/*.tick files and configure the alerts accordingly. A file named cpu.tick or cpu_alert.tick will result in an alarm named cpu_alert.
 
-```docker run -v /var/lib/kapacitor/alerts:/etc/extra-config/kapacitor/kapacitor.alerts:ro appcelerator/kapacitor```
+    docker run -v /var/lib/kapacitor/alerts:/etc/extra-config/kapacitor/kapacitor.alerts:ro appcelerator/kapacitor
 
 A stream recording was included with the image and can be used to simulate a heavy CPU load that will trigger the alerts.
 
-```docker exec -it $(docker ps --format "{{.ID}}" --filter "name=kapacitor") kapacitor replay -id e494ce6c-d063-46f8-9d71-9030a29eef4b -name cpu_alert -fast```
+    docker exec -it $(docker ps --format "{{.ID}}" --filter "name=kapacitor") kapacitor replay -id e494ce6c-d063-46f8-9d71-9030a29eef4b -name cpu_alert -fast
