@@ -105,5 +105,5 @@ if [[ "x$OUTPUT_SLACK_ENABLED" = "xtrue" ]]; then
   curl -s -X POST -H 'Content-type: application/json' --data '{"channel": "#'${OUTPUT_SLACK_CHANNEL}'", "text": "Kapacitor starts on '${KAPACITOR_HOSTNAME:-unknown host}'"}' "$OUTPUT_SLACK_WEBHOOK_URL"
 fi
 CMD="$KAPACITORD_BIN"
-CMDARGS="-config $KAPACITOR_CONF"
+CMDARGS="-config $KAPACITOR_CONF $@"
 exec "$CMD" $CMDARGS
