@@ -21,6 +21,7 @@ SUBSCRIPTION_PROTOCOL | Which protocol to use for subscriptions | http | udp, ht
 SUBSCRIPTION_SYNC_INTERVAL | Subscription resync time interval | 1m0s |
 STARTUP_TIMEOUT | Maximum time to try and connect to InfluxDB during startup | 5m |
 DISABLE_SUBSCRIPTIONS | Turn off all subscriptions | false |
+INTERNAL_STATS | Emit internal statistics about Kapacitor | false |
 OUTPUT_SMTP_ENABLED | SMTP output | false |
 OUTPUT_SMTP_HOST | SMTP host | |
 OUTPUT_SMTP_PORT | SMTP port | |
