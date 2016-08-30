@@ -17,6 +17,10 @@ CONFIG_ARCHIVE_URL | URL of static configuration file tarball archive | |
 INFLUXDB_URL | URL of influxdb | http://localhost:8086 | http://influxdb:8086
 INFLUXDB_DB | INFLUXDB database, used for alert definition | telegraf |
 INFLUXDB_RP | INFLUXDB retention policy, used for alert definition | default |
+SUBSCRIPTION_PROTOCOL | Which protocol to use for subscriptions | http | udp, http or https
+SUBSCRIPTION_SYNC_INTERVAL | Subscription resync time interval | 1m0s |
+STARTUP_TIMEOUT | Maximum time to try and connect to InfluxDB during startup | 5m |
+DISABLE_SUBSCRIPTIONS | Turn off all subscriptions | false |
 OUTPUT_SMTP_ENABLED | SMTP output | false |
 OUTPUT_SMTP_HOST | SMTP host | |
 OUTPUT_SMTP_PORT | SMTP port | |
