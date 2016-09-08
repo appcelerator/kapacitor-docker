@@ -57,7 +57,7 @@ while [[ $nb -eq 0 ]]; do
   sleep 1
   r=$(curl $KAPACITOR_HOST:9092/kapacitor/v1/debug/vars 2>/dev/null | jq '.kapacitor | map(select(.name == "ingress") + select(.tags.database == "telegraf") + select(.tags.retention_policy == "default"))')
   nb=$(echo $r | jq 'length')
-  if [[ $i -gt 25 ]]; then break; fi
+  if [[ $i -gt 35 ]]; then break; fi
   echo -n "+"
 done
 if [[ $nb -lt 1 ]]; then
@@ -74,7 +74,7 @@ while [[ $nb -eq 0 ]]; do
   ((i++))
   sleep 1
   nb=$(curl $KAPACITOR_HOST:9092/kapacitor/v1/debug/vars 2>/dev/null | jq '.kapacitor | map(select(.name == "ingress") + select(.tags.database == "telegraf") + select(.tags.retention_policy == "default"))' | jq -r 'map(select(.tags.measurement == "cpu")) | .[0].values.points_received')
-  if [[ $i -gt 15 ]]; then break; fi
+  if [[ $i -gt 25 ]]; then break; fi
   echo -n "+"
 done
 if [[ $nb -lt 1 ]]; then

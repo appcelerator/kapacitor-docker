@@ -18,11 +18,13 @@ services:
   kapacitor:
     image: appcelerator/kapacitor
     build: .
+    ports:
+      - "9092:9092"
     environment:
       CONFIG_ARCHIVE_URL: "https://github.com/appcelerator/amp-config/archive/0.2.0.tar.gz"
       KAPACITOR_HOSTNAME: auto
       INFLUXDB_URL: http://influxdb:8086
-      SUBSCRIPTION_PROTOCOL: "udp"
+      #SUBSCRIPTION_PROTOCOL: "udp"
   sut:
     image: appcelerator/sut
     build: ./sut
