@@ -61,7 +61,6 @@ wait_for_start_of_kapacitor(){
     local retry=0
     echo "waiting for availability of kapacitor..."
     while ! $KAPACITOR_BIN -url $API_URL list tasks; do
-        netstat -na | grep -w 9092
         retry=$((retry+1))
         if [ $retry -gt 15 ]; then
             echo
