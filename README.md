@@ -31,7 +31,12 @@ OUTPUT_SLACK_ENABLED | Slack output | false |
 OUTPUT_SLACK_WEBHOOK_URL | Slack webhook URL | |
 OUTPUT_SLACK_CHANNEL | Slack Channel, without the pound sign | kapacitor |
 OUTPUT_SLACK_STATE_CHANGE_ONLY | only report state changes | | true
-OUTPUT_SLACK_GLOBAL | sends all alerts to slack | | true
+OUTPUT_SLACK_GLOBAL | sends all alerts to Slack | | true
+OUTPUT_HIPCHAT_ENABLED | HipChat output | false |
+OUTPUT_HIPCHAT_SUBDOMAIN | HipChat webhook URL subdomain | subdomain |
+OUTPUT_HIPCHAT_TOKEN | HipChat token | |
+OUTPUT_HIPCHAT_STATE_CHANGE_ONLY | only report state changes | | true
+OUTPUT_HIPCHAT_GLOBAL | sends all alerts to HipChat | | true
 CONFIG_ARCHIVE_URL | URL of a configuration archive | | 
 
 ## Kapacitor

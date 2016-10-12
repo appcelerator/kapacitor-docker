@@ -99,6 +99,7 @@ echo
 echo "Enabled outputs:"
 echo "SMTP: ${OUTPUT_SMTP_ENABLED:-false} (${OUTPUT_SMTP_TO:-default})"
 echo "SLACK: ${OUTPUT_SLACK_ENABLED:-false} (#${OUTPUT_SLACK_CHANNEL:-kapacitor})"
+echo "HIPCHAT: ${OUTPUT_HIPCHAT_ENABLED:-false} (${OUTPUT_HIPCHAT_SUBDOMAIN}:${OUTPUT_HIPCHAT_ROOM})"
 echo
 if [[ "x$OUTPUT_SLACK_ENABLED" = "xtrue" ]]; then
   curl -s -X POST -H 'Content-type: application/json' --data '{"channel": "#'${OUTPUT_SLACK_CHANNEL}'", "text": "Kapacitor starts on '${KAPACITOR_HOSTNAME:-unknown host}'"}' "$OUTPUT_SLACK_WEBHOOK_URL"
