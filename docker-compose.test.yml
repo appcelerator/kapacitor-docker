@@ -18,8 +18,6 @@ services:
   kapacitor:
     image: appcelerator/kapacitor
     build: .
-    ports:
-      - "9092:9092"
     environment:
       CONFIG_ARCHIVE_URL: "https://github.com/appcelerator/amp-config/archive/0.3.0.tar.gz"
       KAPACITOR_HOSTNAME: auto
