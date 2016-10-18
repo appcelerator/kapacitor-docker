@@ -81,10 +81,27 @@ if [ $? -eq 0 ]; then
   wait_for_start_of_kapacitor
 
   for alert in $CONFIG_EXTRA_DIR/*.tick; do
-    echo "$f" | grep '*' && break
-    alertname="$(basename $alert .tick | sed 's/_alert//')"
+    echo "$alert" | grep '*' && break
+    # default value for database and retention policy
+    alertdb="${INFLUXDB_DB:-telegraf}"
+    alertrp="${INFLUXDB_RP:-default}"
+    IFS='+ ' read -r -a alertarray <<< $(basename $alert .tick)
+    nbfields=${#alertarray[@]}
+    if [[ $nbfields -gt 3 ]]; then
+        echo "ignoring $alert, please fix the filename"
+        continue
+    fi
+    if [[ $nbfields -gt 2 ]]; then
+        alertdb="${alertarray[0]}"
+        alertarray=("${alertarray[@]:1}")
+    fi
+    if [[ $nbfields -gt 1 ]]; then
+        alertrp="${alertarray[0]}"
+        alertarray=("${alertarray[@]:1}")
+    fi
+    alertname=$(echo ${alertarray[0]} | sed 's/_alert//')
     echo "defining alert $alertname..."
-    $KAPACITOR_BIN define ${alertname}_alert -type stream  -tick $alert  -dbrp ${INFLUXDB_DB:-telegraf}.${INFLUXDB_RP:-default}
+    $KAPACITOR_BIN define ${alertname}_alert -type stream  -tick $alert -dbrp ${alertdb}.${alertrp}
     $KAPACITOR_BIN enable ${alertname}_alert
     $KAPACITOR_BIN show ${alertname}_alert
   done
