@@ -16,15 +16,15 @@ RUN apk update && apk upgrade && \
 
 EXPOSE 9092
 
-VOLUME /var/lib/kapacitor
-
 ENV INFLUXDB_URL http://localhost:8086
 ENV INFLUXDB_DB telegraf
 ENV INFLUXDB_RP default
 
 ADD run.sh /run.sh
 ADD kapacitor.conf /etc/kapacitor/kapacitor.conf.tpl
-ADD e494ce6c-d063-46f8-9d71-9030a29eef4b.srpl /.kapacitor/replay/e494ce6c-d063-46f8-9d71-9030a29eef4b.srpl
+ADD e494ce6c-d063-46f8-9d71-9030a29eef4b.srpl /var/lib/kapacitor/replay/e494ce6c-d063-46f8-9d71-9030a29eef4b.srpl
+
+VOLUME /var/lib/kapacitor
 
 ENTRYPOINT ["/bin/sh", "-c"]
 CMD ["/run.sh"]

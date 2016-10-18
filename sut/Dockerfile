@@ -1,4 +1,4 @@
-From appcelerator/alpine:3.4
+From appcelerator/alpine:20160928
 RUN echo "http://nl.alpinelinux.org/alpine/v3.4/community" >> /etc/apk/repositories 
 RUN apk --update add docker
 COPY ./test.sh /bin
