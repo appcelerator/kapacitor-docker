@@ -30,8 +30,8 @@ OUTPUT_SMTP_TO | Recipient | |
 OUTPUT_SLACK_ENABLED | Slack output | false |
 OUTPUT_SLACK_WEBHOOK_URL | Slack webhook URL | |
 OUTPUT_SLACK_CHANNEL | Slack Channel, with the pound sign | #kapacitor | @johnsnow
-OUTPUT_SLACK_STATE_CHANGE_ONLY | only report state changes | | true
-OUTPUT_SLACK_GLOBAL | sends all alerts to slack | | true
+OUTPUT_SLACK_STATE_CHANGE_ONLY | only report state changes | | false
+OUTPUT_SLACK_GLOBAL | sends all alerts to slack | | false
 CONFIG_ARCHIVE_URL | URL of a configuration archive | | 
 
 ## Kapacitor
