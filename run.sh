@@ -17,6 +17,12 @@ if [ "x$KAPACITOR_HOSTNAME" = "xauto" ]; then
   if [ -z "$KAPACITOR_HOSTNAME" ]; then
     # get local IP
     KAPACITOR_HOSTNAME=$(ip a show dev eth0 | grep inet | grep eth0 | tail -1 | sed -e 's/^.*inet.//g' -e 's/\/.*$//g')
+    if [ -z "$KAPACITOR_HOSTNAME" ]; then
+      KAPACITOR_HOSTNAME=$(ip a show dev eno1 | grep inet | grep eth0 | tail -1 | sed -e 's/^.*inet.//g' -e 's/\/.*$//g')
+    fi
+    echo "INFO - hostname retrieved from network: $KAPACITOR_HOSTNAME"
+  else
+    echo "INFO - hostname retrieved from AWS: $KAPACITOR_HOSTNAME"
   fi
 fi
 
