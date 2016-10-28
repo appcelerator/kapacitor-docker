@@ -63,6 +63,18 @@ done
 if [[ $nb -lt 1 ]]; then
   echo
   echo "failed ($nb subscriptions)"
+  curl $KAPACITOR_HOST:9092/kapacitor/v1/debug/vars 2>/dev/null
+  echo "Running containers:"
+  docker ps
+  ct=$(docker ps -a | grep /telegraf | head -1 | awk '{print $1}')
+  echo "logs from influxdb $ct:"
+  docker logs $ct
+  ci=$(docker ps -a | grep /influxdb | head -1 | awk '{print $1}')
+  echo "logs from influxdb $ci:"
+  docker logs $ci
+  ck=$(docker ps -a | grep /kapacitor | head -1 | awk '{print $1}')
+  echo "logs from kapacitor $ck:"
+  docker logs $ck
   exit 1
 fi
 echo "($nb) [OK]"
