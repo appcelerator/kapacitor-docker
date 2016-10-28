@@ -32,7 +32,7 @@ VOLUME /var/lib/kapacitor
 ENTRYPOINT ["/bin/sh", "-c"]
 CMD ["/run.sh"]
 
-HEALTHCHECK --interval=5s --retries=3 --timeout=1s CMD curl -I localhost:9092/kapacitor/v1/ping | grep -q "HTTP/1.1 204 No Content"
+HEALTHCHECK --interval=5s --retries=3 --timeout=1s CMD curl -I 127.0.0.1:9092/kapacitor/v1/ping | grep -q "HTTP/1.1 204 No Content"
 
 LABEL axway_image=kapacitor
 # will be updated whenever there's a new commit
