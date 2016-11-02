@@ -45,3 +45,9 @@ Kapacitor will look for /etc/extra-config/kapacitor/*.tick files and configure t
 A stream recording was included with the image and can be used to simulate a heavy CPU load that will trigger the alerts.
 
     docker exec -it $(docker ps --format "{{.ID}}" --filter "name=kapacitor") kapacitor replay -recording e494ce6c-d063-46f8-9d71-9030a29eef4b -task cpu_alert
+
+## Tags
+
+- kapacitor-0.13
+- kapacitor-1.0, latest
+- kapacitor-1.1
