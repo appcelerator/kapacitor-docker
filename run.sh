@@ -107,9 +107,12 @@ if [ $? -eq 0 ]; then
     fi
     alertname=$(echo ${alertarray[0]} | sed 's/_alert//')
     echo "defining alert $alertname..."
-    $KAPACITOR_BIN define ${alertname}_alert -type stream  -tick $alert -dbrp ${alertdb}.${alertrp}
-    $KAPACITOR_BIN enable ${alertname}_alert
-    $KAPACITOR_BIN show ${alertname}_alert
+    $KAPACITOR_BIN -url $API_URL define ${alertname}_alert -type stream  -tick $alert -dbrp ${alertdb}.${alertrp}
+    $KAPACITOR_BIN -url $API_URL enable ${alertname}_alert
+    $KAPACITOR_BIN -url $API_URL show ${alertname}_alert
+    if [[ $? -ne 0 ]]; then
+        exit 1
+    fi
   done
 
   echo
