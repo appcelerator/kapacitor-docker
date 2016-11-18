@@ -50,5 +50,5 @@ A stream recording was included with the image and can be used to simulate a hea
 ## Tags
 
 - kapacitor-0.13
-- kapacitor-1.0.2-2, kapacitor-1.0, latest
-- kapacitor-1.1.0-1, kapacitor-1.1
+- kapacitor-1.0.2-2, kapacitor-1.0
+- kapacitor-1.1.0-1, kapacitor-1.1, latest
