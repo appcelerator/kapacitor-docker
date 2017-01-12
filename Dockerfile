@@ -1,11 +1,10 @@
-FROM appcelerator/alpine:20160928
+FROM appcelerator/alpine:3.5.1
 MAINTAINER Nicolas Degory <ndegory@axway.com>
 
-ENV KAPACITOR_VERSION 1.1.0
+ENV KAPACITOR_VERSION 1.1.1
 
 RUN apk update && apk upgrade && \
-    apk -v --virtual build-deps add --update go curl git gcc musl-dev && \
-    apk add go@community && \
+    apk -v --virtual build-deps add --update go python git gcc musl-dev && \
     go version && \
     export GOPATH=/go && \
     go get -v github.com/influxdata/kapacitor && \
@@ -14,7 +13,6 @@ RUN apk update && apk upgrade && \
     python ./build.py && \
     mv ./build/kapacitor* /bin/ && \
     mkdir -p /var/lib/kapacitor && \
-    apk del binutils-libs binutils gmp isl libgomp libatomic libgcc pkgconf pkgconfig mpfr3 mpc1 libstdc++ gcc go && \
     apk del build-deps && cd / && rm -rf /var/cache/apk/* $GOPATH
 
 EXPOSE 9092

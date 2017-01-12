@@ -48,10 +48,12 @@ if [ -f "$CONFIG_OVERRIDE_FILE" ]; then
   cp "${CONFIG_OVERRIDE_FILE}" "${KAPACITOR_CONF}"
 else
   if [ -f "$KAPACITOR_CONF.tpl" ]; then
+    echo "Generating Kapacitor configuration from template..."
     # deadman configuration can contain markups similar to those of envtpl
-    cat "$KAPACITOR_CONF.tpl" | sed '/{{ \./ s/{{\([^{]*\)}}/@@\1@@/g' > "$KAPACITOR_CONF.escaped.tpl"
-    envtpl $KAPACITOR_CONF.escaped.tpl
+    mv "$KAPACITOR_CONF.tpl" "$KAPACITOR_CONF.escaped.tpl"
+    envtpl -o "$KAPACITOR_CONF.escaped" "$KAPACITOR_CONF.escaped.tpl" && rm "$KAPACITOR_CONF.escaped.tpl"
     cat "$KAPACITOR_CONF.escaped" | sed '/@@ \./ s/@@\([^@]*\)@@/{{\1}}/g' > "$KAPACITOR_CONF"
+    echo "Done"
   fi
 fi
 if [ ! -f "$KAPACITOR_CONF" ]; then
