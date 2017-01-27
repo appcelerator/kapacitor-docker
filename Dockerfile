@@ -1,7 +1,7 @@
 FROM appcelerator/alpine:3.5.1
 MAINTAINER Nicolas Degory <ndegory@axway.com>
 
-ENV KAPACITOR_VERSION 1.1.1
+ENV KAPACITOR_VERSION 1.2.0
 
 RUN apk update && apk upgrade && \
     apk -v --virtual build-deps add --update go python git gcc musl-dev && \
