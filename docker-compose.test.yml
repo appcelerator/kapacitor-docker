@@ -1,7 +1,7 @@
 version: '2'
 services:
   telegraf:
-    image: appcelerator/telegraf:telegraf-1.1
+    image: appcelerator/telegraf
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /var/run/utmp:/var/run/utmp:ro
@@ -10,7 +10,7 @@ services:
       INFLUXDB_URL: "http://influxdb:8086"
       INPUT_DOCKER_ENABLED: "true"
   influxdb:
-    image: appcelerator/influxdb:influxdb-1.1
+    image: appcelerator/influxdb
     environment:
       FORCE_HOSTNAME: influxdb
       CONFIG_ARCHIVE_URL: "https://github.com/appcelerator/amp-config/archive/0.4.0.tar.gz"
